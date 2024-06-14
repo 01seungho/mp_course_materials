@@ -17,12 +17,16 @@
     .globl  memset_simple
     .type   memset_simple, %function
 memset_simple:
-    /* memset_simple.h 에서 정의된 함수, memset_simple 를 구현하라. */
-    // 각 매개변수 전달을 위해 사용되는 레지스터
-    //    void * buffer : r0
-    //    int value     : r1
-    //    size_t size   : r2
-    // 사용 명령: movs, cmp, beq, strb, adds, b, bx
+ movs    r3, r2
+    beq     end
 
-    // 리턴값 전달을 위해 사용되는 레지스터: r0
+loop:
+    strb    r1, [r0], #1
+    subs    r3, #1
+    bne     loop
+
+end:
+
+    mov     r0, r2
+    bx      lr
     bx lr
