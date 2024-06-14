@@ -21,6 +21,23 @@ memcpy_simple:
     // r0: void * destination, r1: void * source, r2: size_t size
     push    {r4}
 
+    cmp     r2, #0
+    beq     memcpy_simple_done
+
+    mov     r3, r0    // r3 = destination
+    mov     r4, r1    // r4 = source
+
+memcpy_simple_loop:
+
+    ldrb    r5, [r4], #1
+    strb    r5, [r3], #1
+
+    subs    r2, r2, #1
+    bne     memcpy_simple_loop
+
+memcpy_simple_done:
+
+    pop     {r4}
 
 
 
@@ -30,5 +47,5 @@ memcpy_simple:
 
 
 
-    // r0: return value (void * destination)
+
     bx lr
