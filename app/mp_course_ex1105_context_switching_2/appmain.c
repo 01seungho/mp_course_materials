@@ -10,6 +10,31 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/*
+    Enhancement:
+        * Support yield
+*/
+
+/*
+    Context of task
+        15 xPSR
+        14 PC
+        13 LR
+        12 R12
+        11 R3
+        10 R2
+        9  R1
+        8  R0
+        7  R11
+        6  R10
+        5  R9
+        4  R8
+        3  R7
+        2  R6
+        1  R5
+        0  R4
+ */
+
 // Define SVC functions
 int __attribute__((naked)) svc_service_yield(void)
 {
@@ -102,7 +127,7 @@ void task0(void)
 // ------------------------------------------------------------
 void task1(void)
 {
-    bsp_busywaitms(250 * 0);
+    bsp_busywaitms(250 * 1);
     while (1) {
         printf("1\n");
         bsp_busywaitms(100);
@@ -111,7 +136,7 @@ void task1(void)
 // ------------------------------------------------------------
 void task2(void)
 {
-    bsp_busywaitms(250 * 0);
+    bsp_busywaitms(250 * 2);
     while (1) {
         printf("2\n");
         bsp_busywaitms(100);
@@ -121,7 +146,7 @@ void task2(void)
 // ------------------------------------------------------------
 void task3(void)
 {
-    bsp_busywaitms(250 * 0);
+    bsp_busywaitms(250 * 3);
     while (1) {
         printf("3\n");
         bsp_busywaitms(100);
@@ -160,8 +185,10 @@ void reschedule(void)
 // ------------------------------------------------------------
 void SysTick_Handler(void) // 1KHz
 {
-    uint32_t psp = __get_PSP();
+    uint32_t psp;
     (void) psp;
+
+    psp = __get_PSP();
 
     // Increment systick counter for LED blinking
     systick_count++;
@@ -173,8 +200,10 @@ void SysTick_Handler(void) // 1KHz
 
 void SVC_Handler_main(unsigned int * svc_args)
 {
-    uint32_t psp = __get_PSP();
+    uint32_t psp;
     (void) psp;
+
+    psp = __get_PSP();
 
     // Stack frame contains:
     // r0, r1, r2, r3, r12, r14, the return address and xPSR
